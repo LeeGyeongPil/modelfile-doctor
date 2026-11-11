@@ -1,0 +1,4 @@
+# A Llama 2 style template on a ChatML model: `ollama create` says success, the model misbehaves.
+FROM ./synthetic-chatml.gguf
+PARAMETER stop "</s>"
+TEMPLATE """[INST] {{ .Prompt }} [/INST]"""
