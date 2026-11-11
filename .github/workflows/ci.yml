@@ -1,0 +1,26 @@
+# No API keys or models needed: tests use synthetic GGUF files and a stub Ollama server.
+name: ci
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "17 3 * * 1"   # weekly: catch breakage from new dependency/runtime releases
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v8.3.2
+      - run: uv python install
+      - run: uv sync --locked
+      - run: uv run pytest -q
+      - run: uv run modelfile-doctor demo --lang en
+      - run: uv run modelfile-doctor demo --lang ko
+  smoke-py310:
+    # The runtime has zero dependencies, so the oldest supported Python only needs the demo.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v8.3.2
+      - run: uv run --python 3.10 --no-dev modelfile-doctor demo --lang en
