@@ -35,7 +35,7 @@ uv sync
 uv run modelfile-doctor --version
 ```
 ```text
-modelfile-doctor 0.1.1
+modelfile-doctor 0.2.0
 ```
 
 명령을 PATH 에 두려면 `uv tool install git+https://github.com/LeeGyeongPil/modelfile-doctor` 를 쓰세요. 런타임 의존성은 없습니다. `gguf`·`numpy` 는 테스트에서만 씁니다.
@@ -244,6 +244,7 @@ flowchart LR
 | `MF010` / `MF013` | 경고 | 폐기된 파라미터(`mirostat`), 또는 일반 범위를 벗어난 값(`temperature 5`) |
 | `MF014` | 오류 | `MESSAGE` role 이 `system`, `user`, `assistant` 가 아님 |
 | `MF020` | 오류 | `FROM` 경로가 없거나 GGUF 파일이 아님 |
+| `MF021` | 오류 | `ADAPTER` 경로가 없음 (끄려면 `--ignore MF021`) |
 | `TP001`~`TP004` | 오류 | 짝이 안 맞는 `{{ }}`, Go 템플릿 안의 Jinja 문법, 불필요한 `end`/`else`, 닫히지 않은 블록 |
 | `TP005` | 경고 | 알 수 없는 템플릿 변수(`.Contnt`) |
 
@@ -277,6 +278,7 @@ Modelfile 을 모델과 비교하는 검사입니다. 나머지 규칙은 `--lis
 |---|---|---|
 | `Cannot find "…"` 류의 한 줄 오류(영어 출력 기준), 종료 코드 2 | 경로가 틀림 | 경로 확인. 디렉터리는 탐색하지 않음 |
 | `MF020 FROM 경로가 없음` | `FROM ./x.gguf` 는 명령을 실행한 곳이 아니라 Modelfile 위치 기준 | 경로를 고치거나 올바른 Modelfile 을 검사 |
+| `MF021` ADAPTER 경로가 없음 | `ADAPTER` 는 Modelfile 위치 기준 상대 경로(`~` 확장), 디렉터리도 존재로 인정 | 경로를 고치거나 `--ignore MF021` 로 끄기 |
 | `CT010` 정보만 나옴 | `FROM` 이 모델 이름 | `--ollama` 를 주기(Ollama 실행 필요) |
 | `CT011` 정보 | GGUF 헤더를 읽지 못함(잘림 또는 지원하지 않는 버전) | `modelfile-doctor inspect FILE.gguf` 로 정확한 이유 확인 |
 | 출력 언어가 다름 | 로캘 변수는 `--lang`·`MODELFILE_DOCTOR_LANG` 다음 순서 | `--lang en` 또는 `--lang ko` 사용 |

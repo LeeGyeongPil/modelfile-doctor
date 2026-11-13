@@ -3,6 +3,14 @@
 All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] - 2026-11-13
+
+### Added
+- `MF021`: `ADAPTER` path that does not exist (relative to the Modelfile, `~` expanded; model-name values are not checked; files and directories both pass).
+
+### Changed
+- Existing Modelfiles may now report a new error and fail CI. To turn the rule off, use `--ignore MF021`.
+
 ## [0.1.1] - 2026-11-13
 
 ### Fixed
@@ -19,5 +27,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - English and Korean output (`--lang`, `MODELFILE_DOCTOR_LANG`, `LC_ALL`/`LC_MESSAGES`/`LANG`).
 - `demo` command (synthetic GGUF without weights) and `inspect` command.
 
+[0.2.0]: https://github.com/LeeGyeongPil/modelfile-doctor/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/LeeGyeongPil/modelfile-doctor/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/LeeGyeongPil/modelfile-doctor/releases/tag/v0.1.0

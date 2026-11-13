@@ -35,7 +35,7 @@ uv sync
 uv run modelfile-doctor --version
 ```
 ```text
-modelfile-doctor 0.1.1
+modelfile-doctor 0.2.0
 ```
 
 To put the command on your PATH: `uv tool install git+https://github.com/LeeGyeongPil/modelfile-doctor`. There are no runtime dependencies; `gguf` and `numpy` are only used by the tests.
@@ -246,6 +246,7 @@ flowchart LR
 | `MF010` / `MF013` | warning | Deprecated parameter (`mirostat`), or a value outside the usual range (`temperature 5`) |
 | `MF014` | error | `MESSAGE` role is not `system`, `user` or `assistant` |
 | `MF020` | error | `FROM` path does not exist or is not a GGUF file |
+| `MF021` | error | `ADAPTER` path does not exist (skip with `--ignore MF021`) |
 | `TP001` to `TP004` | error | Unbalanced `{{ }}`, Jinja syntax in a Go template, stray `end`/`else`, a block that is never closed |
 | `TP005` | warning | Unknown template variable (`.Contnt`) |
 
@@ -279,6 +280,7 @@ These are the checks that compare your Modelfile with the model. `--list-rules` 
 |---|---|---|
 | `error: Cannot find "…"` and exit 2 | The path is wrong | Check the path; directories are not searched |
 | `MF020 FROM path ... does not exist` | `FROM ./x.gguf` is resolved relative to the Modelfile, not to where you run the command | Fix the path or run on the right Modelfile |
+| `MF021 ADAPTER path ... does not exist` | `ADAPTER` is resolved relative to the Modelfile (`~` is expanded); a directory counts as existing | Fix the path, or turn the rule off with `--ignore MF021` |
 | `CT010` info only | `FROM` is a model name | Pass `--ollama` (Ollama must be running) |
 | `CT011` info | The GGUF header could not be read (truncated or unsupported version) | Run `modelfile-doctor inspect FILE.gguf` to see the exact reason |
 | Output is in the wrong language | Locale variables win only after `--lang` and `MODELFILE_DOCTOR_LANG` | Pass `--lang en` or `--lang ko` |
