@@ -31,7 +31,7 @@
   "severity.info": "info",
   "summary.clean": "{path}: no problems",
   "summary.totals": "Summary: {errors} error(s), {warnings} warning(s), {infos} info in {files} file(s)",
-  "list.header": "Rule   Severity         Description",
+  "list.header": "Rule   Severity       Description",
   "demo.banner": "practice fixture: synthetic GGUF without weights (nothing here is a real model)",
   "demo.dir_temp": "Files were written to a temporary directory ({path}) and are removed afterwards. Use --out DIR to keep them.",
   "demo.dir_kept": "Files were written to {path}.",

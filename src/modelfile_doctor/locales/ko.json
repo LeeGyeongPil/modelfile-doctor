@@ -31,7 +31,7 @@
   "severity.info": "정보",
   "summary.clean": "{path}: 문제 없음",
   "summary.totals": "요약: 오류 {errors}건, 경고 {warnings}건, 정보 {infos}건 (파일 {files}개)",
-  "list.header": "규칙   심각도           설명",
+  "list.header": "규칙   심각도         설명",
   "demo.banner": "연습용 합성 GGUF(가중치 없음): 여기 있는 것은 실제 모델이 아닙니다",
   "demo.dir_temp": "파일은 임시 폴더({path})에 만들었고 끝나면 지웁니다. 남기려면 --out DIR 을 쓰세요.",
   "demo.dir_kept": "파일을 {path} 에 만들었습니다.",

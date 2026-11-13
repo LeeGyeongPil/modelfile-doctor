@@ -109,3 +109,28 @@ def test_example_files_behave(tmp_path, capsys):
     assert main(["--format", "json", str(tmp_path / "Modelfile.mismatch")]) == 1
     data = json.loads(capsys.readouterr().out)
     assert {"CT001", "CT002", "CT003", "CT004"} <= {d["rule"] for d in data[0]["diagnostics"]}
+
+
+def _display_width(text):
+    import unicodedata
+
+    return sum(2 if unicodedata.east_asian_width(c) in "WF" else 1 for c in text)
+
+
+@pytest.mark.parametrize("lang", ["en", "ko"])
+def test_list_rules_header_aligned_with_rows(lang, capsys):
+    assert main(["--list-rules", "--lang", lang, "--no-color"]) == 0
+    lines = capsys.readouterr().out.splitlines()
+    header, rows = lines[0], [r for r in lines[1:] if r.strip()]
+    assert rows
+    # header: rule label, severity label, description label (single-space-free labels)
+    parts = header.split()
+    sev_w = _display_width(header[: header.index(parts[1])])
+    desc_w = _display_width(header[: header.index(parts[2])])
+    for row in rows:
+        rp = row.split()
+        assert _display_width(row[: row.index(rp[1], len(rp[0]))]) == sev_w
+        sev_end = row.index(rp[1], len(rp[0])) + len(rp[1])
+        rest = row[sev_end:]
+        desc_start = sev_end + (len(rest) - len(rest.lstrip()))
+        assert _display_width(row[:desc_start]) == desc_w, row
