@@ -35,7 +35,7 @@ uv sync
 uv run modelfile-doctor --version
 ```
 ```text
-modelfile-doctor 0.2.0
+modelfile-doctor 0.3.0
 ```
 
 명령을 PATH 에 두려면 `uv tool install git+https://github.com/LeeGyeongPil/modelfile-doctor` 를 쓰세요. 런타임 의존성은 없습니다. `gguf`·`numpy` 는 테스트에서만 씁니다.
@@ -167,6 +167,16 @@ uv run modelfile-doctor --format json --select CT ./demo-files/Modelfile.bad
 
 ![검사기가 아는 모든 규칙](docs/images/03-list-rules.ko.png)
 *`--list-rules` 는 모든 규칙 id·심각도·짧은 설명을 보여 줍니다.*
+
+[pre-commit](https://pre-commit.com) 훅으로 쓰려면 `.pre-commit-config.yaml` 에 다음을 넣습니다.
+```yaml
+repos:
+  - repo: https://github.com/LeeGyeongPil/modelfile-doctor
+    rev: v0.3.0
+    hooks:
+      - id: modelfile-doctor
+```
+훅은 이름이 `Modelfile` 또는 `Modelfile.*` 인 파일에 실행됩니다. 옵션은 `args:` 로 넘기고(모델 파일이 저장소에 없으면 `args: [--ignore, MF020]` 처럼), `Modelfile.gguf` 같은 파일은 `exclude:` 로 거릅니다.
 
 ## 설정
 설정 파일은 없고 환경변수만 있습니다.

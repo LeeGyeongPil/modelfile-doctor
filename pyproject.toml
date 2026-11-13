@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "modelfile-doctor"
-version = "0.2.0"
+version = "0.3.0"
 description = "Check an Ollama Modelfile against the GGUF metadata it points to, before you run `ollama create`."
 readme = "README.md"
 license = { text = "MIT" }

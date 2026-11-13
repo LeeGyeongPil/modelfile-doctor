@@ -35,7 +35,7 @@ uv sync
 uv run modelfile-doctor --version
 ```
 ```text
-modelfile-doctor 0.2.0
+modelfile-doctor 0.3.0
 ```
 
 To put the command on your PATH: `uv tool install git+https://github.com/LeeGyeongPil/modelfile-doctor`. There are no runtime dependencies; `gguf` and `numpy` are only used by the tests.
@@ -167,6 +167,16 @@ prints a JSON array with one object per file: `path`, `encoding` and `diagnostic
 
 ![All rules the checker knows](docs/images/03-list-rules.png)
 *`--list-rules` shows every rule id, its severity and a short description.*
+
+Use it as a [pre-commit](https://pre-commit.com) hook; in `.pre-commit-config.yaml`:
+```yaml
+repos:
+  - repo: https://github.com/LeeGyeongPil/modelfile-doctor
+    rev: v0.3.0
+    hooks:
+      - id: modelfile-doctor
+```
+The hook runs on files named `Modelfile` or `Modelfile.*`. Pass options with `args:` (for example `args: [--ignore, MF020]` if the model files are not in the repository), and use `exclude:` to skip files such as `Modelfile.gguf`.
 
 ## Configuration
 There is no config file. Only environment variables:

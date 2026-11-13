@@ -1,0 +1,6 @@
+- id: modelfile-doctor
+  name: modelfile-doctor
+  description: Check Ollama Modelfiles for syntax errors and mismatches with the GGUF model.
+  entry: modelfile-doctor
+  language: python
+  files: '(^|/)Modelfile(\..*)?$'
