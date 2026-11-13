@@ -1,4 +1,5 @@
 from modelfile_doctor import lint_path, lint_text
+from modelfile_doctor.cli import main
 
 SYNTAX_ERRORS = """FROM qwen3:4b
 PARAMETER TEMPERATURE 0.7
@@ -61,3 +62,28 @@ def test_from_path_checks(tmp_path):
 def test_parameter_value_forms():
     text = "FROM x\nPARAMETER use_mmap maybe\nPARAMETER use_mmap true\nPARAMETER top_p 1.5\nPARAMETER num_ctx -1\n"
     assert pairs(lint_text(text, select=["MF"])) == {("MF012", 2), ("MF013", 4), ("MF013", 5)}
+
+
+def test_adapter_path_checks(tmp_path):
+    (tmp_path / "lora.gguf").write_bytes(b"x")
+    (tmp_path / "lora-dir").mkdir()
+
+    def run(arg, **kw):
+        return lint_text(f"FROM qwen3:4b\nADAPTER {arg}\n", base_dir=str(tmp_path), **kw)
+
+    d = run("./missing-lora.gguf", select=["MF021"]).diagnostics
+    assert len(d) == 1 and d[0].rule == "MF021"
+    assert d[0].message_key == "diag.MF021.missing" and d[0].severity.value == "error"  # gitleaks:allow
+    assert run("./lora.gguf", select=["MF021"]).diagnostics == []
+    assert run("./lora-dir", select=["MF021"]).diagnostics == []
+    assert run("~/nope-xyz.safetensors", select=["MF021"]).diagnostics[0].rule == "MF021"
+    assert run("/abs/없는경로", select=["MF021"]).diagnostics[0].rule == "MF021"
+    assert run("some-adapter:latest", select=["MF021"]).diagnostics == []
+    assert run("./missing-lora.gguf", select=["MF"], ignore=["MF021"]).diagnostics == []
+    assert all(x.rule != "MF020" for x in run("./missing-lora.gguf").diagnostics)
+
+
+def test_adapter_missing_cli(tmp_path, capsys):
+    (tmp_path / "Modelfile").write_text("FROM qwen3:4b\nADAPTER ./missing-lora.gguf\n")
+    assert main(["--lang", "en", str(tmp_path / "Modelfile")]) == 1
+    assert "ADAPTER path" in capsys.readouterr().out

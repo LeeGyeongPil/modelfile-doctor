@@ -83,6 +83,8 @@ def check_modelfile(parsed: ParsedModelfile, encoding: str, base_dir: str = ".")
                 diags.append(Diagnostic("MF014", Severity.ERROR, cmd.line, "diag.MF014", {"role": role}))
         elif cmd.name == "from" and cmd.args:
             diags.extend(_check_from_path(cmd.line, cmd.args, base_dir))
+        elif cmd.name == "adapter" and cmd.args:
+            diags.extend(_check_adapter_path(cmd.line, cmd.args, base_dir))
     return diags
 
 
@@ -140,3 +142,14 @@ def _check_from_path(line: int, arg: str, base_dir: str) -> list[Diagnostic]:
     if magic != GGUF_MAGIC:
         return [Diagnostic("MF020", Severity.ERROR, line, "diag.MF020.not_gguf", {"path": arg})]
     return []
+
+
+def _check_adapter_path(line: int, arg: str, base_dir: str) -> list[Diagnostic]:
+    """MF021: an ADAPTER value that looks like a path must exist (file or directory)."""
+    looks = arg.startswith(("/", "./", "../", "~", ".\\", "..\\")) or (len(arg) > 2 and arg[1:3] in (":\\", ":/"))
+    looks = looks or arg.lower().endswith((".gguf", ".safetensors"))
+    if not looks:
+        return []  # model-name form: not checked
+    if resolve_from_path(arg, base_dir).exists():
+        return []
+    return [Diagnostic("MF021", Severity.ERROR, line, "diag.MF021.missing", {"path": arg})]

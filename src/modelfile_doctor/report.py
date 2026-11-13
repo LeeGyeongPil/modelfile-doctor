@@ -28,6 +28,7 @@ RULES: dict[str, tuple[Severity, ...]] = {
     "MF015": (Severity.WARNING,),
     "MF016": (Severity.WARNING,),
     "MF020": (Severity.ERROR,),
+    "MF021": (Severity.ERROR,),
     "TP001": (Severity.ERROR,),
     "TP002": (Severity.ERROR,),
     "TP003": (Severity.ERROR,),
