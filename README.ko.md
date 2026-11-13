@@ -35,7 +35,7 @@ uv sync
 uv run modelfile-doctor --version
 ```
 ```text
-modelfile-doctor 0.1.0
+modelfile-doctor 0.1.1
 ```
 
 명령을 PATH 에 두려면 `uv tool install git+https://github.com/LeeGyeongPil/modelfile-doctor` 를 쓰세요. 런타임 의존성은 없습니다. `gguf`·`numpy` 는 테스트에서만 씁니다.
@@ -163,7 +163,7 @@ uv run modelfile-doctor --no-color --lang ko ./demo-files/Modelfile.mismatch ./d
 ```bash
 uv run modelfile-doctor --format json --select CT ./demo-files/Modelfile.bad
 ```
-파일마다 객체 하나가 있는 JSON 배열이 나옵니다: `path`, `encoding`, `diagnostics` 이고, 각 진단은 `rule`, `severity`, `line`, `message_key`, `params`, `message`, `fixable`(0.1.0 에서는 항상 `false`)을 가집니다. `message_key`·`params` 는 언어와 무관하고 `message` 만 번역됩니다.
+파일마다 객체 하나가 있는 JSON 배열이 나옵니다: `path`, `encoding`, `diagnostics` 이고, 각 진단은 `rule`, `severity`, `line`, `message_key`, `params`, `message`, `fixable`(현재는 항상 `false`)을 가집니다. `message_key`·`params` 는 언어와 무관하고 `message` 만 번역됩니다.
 
 ![검사기가 아는 모든 규칙](docs/images/03-list-rules.ko.png)
 *`--list-rules` 는 모든 규칙 id·심각도·짧은 설명을 보여 줍니다.*
@@ -268,9 +268,8 @@ Modelfile 을 모델과 비교하는 검사입니다. 나머지 규칙은 `--lis
 - `CT001` 은 턴 끝 토큰이 `stop` 에 없으면 생성이 이어질 수 있다고 가정합니다. Ollama runner 의 실제 처리는 버전마다 다를 수 있으니 증거가 아니라 경고로 읽으세요.
 - `PARAMETER` 이름과 지시어 표는 Ollama 0.40.15(2026-11-12 확인) 기준 스냅샷입니다. 더 새로운 Ollama 가 추가한 파라미터는 표가 갱신될 때까지 `MF011` 로 나올 수 있습니다.
 - `--ollama` 는 Ollama 가 알려 준 모델 파일을 같은 컴퓨터에서 읽을 수 있을 때만 동작하며 원격 Ollama 서버는 지원하지 않습니다. 여기서는 실제 설치가 아니라 스텁 서버로만 확인했습니다.
-- 0.1.0 에서 `fixable` 은 항상 `false` 입니다. 문제를 알려 줄 뿐 파일을 고쳐 쓰지는 않습니다.
+- 현재 `fixable` 은 항상 `false` 입니다. 문제를 알려 줄 뿐 파일을 고쳐 쓰지는 않습니다.
 - 테스트 빈틈(알려진 것): Modelfile 읽기의 4 MiB 상한을 없애도 실패하는 테스트가 없고, "데모 폴더를 만들 수 없음" 메시지 테스트는 종료 코드와 언어만 확인하며 문구는 확인하지 않습니다.
-- `--list-rules` 의 머리글 줄이 아래 행과 2칸 어긋납니다(겉모양만의 문제).
 - 4 MiB 보다 큰 Modelfile 은 거부하고, Modelfile 자리에 GGUF 파일을 주면 `inspect` 를 쓰라고 안내합니다.
 
 ## 자주 겪는 문제

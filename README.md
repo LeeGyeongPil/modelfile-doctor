@@ -35,7 +35,7 @@ uv sync
 uv run modelfile-doctor --version
 ```
 ```text
-modelfile-doctor 0.1.0
+modelfile-doctor 0.1.1
 ```
 
 To put the command on your PATH: `uv tool install git+https://github.com/LeeGyeongPil/modelfile-doctor`. There are no runtime dependencies; `gguf` and `numpy` are only used by the tests.
@@ -163,7 +163,7 @@ Expected: `Modelfile.mismatch` gives 2 errors and 3 warnings (the CT001 to CT004
 ```bash
 uv run modelfile-doctor --format json --select CT ./demo-files/Modelfile.bad
 ```
-prints a JSON array with one object per file: `path`, `encoding` and `diagnostics`, each diagnostic having `rule`, `severity`, `line`, `message_key`, `params`, `message` and `fixable` (always `false` in 0.1.0). `message_key` and `params` do not depend on the language; only `message` is translated.
+prints a JSON array with one object per file: `path`, `encoding` and `diagnostics`, each diagnostic having `rule`, `severity`, `line`, `message_key`, `params`, `message` and `fixable` (always `false` for now). `message_key` and `params` do not depend on the language; only `message` is translated.
 
 ![All rules the checker knows](docs/images/03-list-rules.png)
 *`--list-rules` shows every rule id, its severity and a short description.*
@@ -270,9 +270,8 @@ These are the checks that compare your Modelfile with the model. `--list-rules` 
 - `CT001` assumes that a turn-ending token missing from `stop` can make generation run on. How the Ollama runner treats it can differ by version, so read it as a warning, not as proof.
 - The `PARAMETER` names and instruction tables are a snapshot of Ollama 0.40.15 (checked 2026-11-12). A newer Ollama may add parameters that this tool reports as `MF011` until the table is updated.
 - `--ollama` only works when the model file that Ollama reports is readable on the same machine; remote Ollama servers are not supported. It was verified here only against a stub server, not a real install.
-- `fixable` is always `false` in 0.1.0: the tool reports problems but does not rewrite your file.
+- `fixable` is always `false` for now: the tool reports problems but does not rewrite your file.
 - Test gaps (known): there is no test that fails if the 4 MiB cap is removed from the Modelfile read, and the test for the "cannot create demo directory" message only checks the exit code and language, not the wording.
-- The header line of `--list-rules` is two columns out of line with the rows below it (cosmetic).
 - A Modelfile larger than 4 MiB is refused, and a GGUF file passed as the Modelfile gets a hint to use `inspect`.
 
 ## Troubleshooting

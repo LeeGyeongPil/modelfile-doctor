@@ -36,3 +36,6 @@ build/
 .flutter-plugins
 .flutter-plugins-dependencies
 coverage/
+
+# Local tool state
+.claude/
