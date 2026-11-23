@@ -3,6 +3,13 @@
 All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+## [0.3.3] - 2026-11-23
+
+### Fixed
+- `MF014` now also reports a `MESSAGE` that has a role but no content (e.g. `MESSAGE system`), which `ollama create` rejects.
+
 ## [0.3.2] - 2026-11-23
 
 ### Fixed

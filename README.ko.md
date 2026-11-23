@@ -35,7 +35,7 @@ uv sync
 uv run modelfile-doctor --version
 ```
 ```text
-modelfile-doctor 0.3.2
+modelfile-doctor 0.3.3
 ```
 
 명령을 PATH 에 두려면 `uv tool install git+https://github.com/LeeGyeongPil/modelfile-doctor` 를 쓰세요. 런타임 의존성은 없습니다. `gguf`·`numpy` 는 테스트에서만 씁니다.
@@ -172,7 +172,7 @@ uv run modelfile-doctor --format json --select CT ./demo-files/Modelfile.bad
 ```yaml
 repos:
   - repo: https://github.com/LeeGyeongPil/modelfile-doctor
-    rev: v0.3.2
+    rev: v0.3.3
     hooks:
       - id: modelfile-doctor
 ```
@@ -252,7 +252,7 @@ flowchart LR
 | `MF002` / `MF004` | 오류 | `FROM` 줄이 없음, 또는 `SYSTM` 같은 알 수 없는 지시어 |
 | `MF011` / `MF012` | 오류 | 알 수 없는 `PARAMETER` 이름(`TEMPERATURE`), 또는 잘못된 값 타입(`num_ctx 4k`) |
 | `MF010` / `MF013` | 경고 | 폐기된 파라미터(`mirostat`), 또는 일반 범위를 벗어난 값(`temperature 5`) |
-| `MF014` | 오류 | `MESSAGE` role 이 `system`, `user`, `assistant` 가 아님 |
+| `MF014` | 오류 | `MESSAGE` role 이 `system`, `user`, `assistant` 가 아니거나 내용이 없음 |
 | `MF020` | 오류 | `FROM` 경로가 없거나 GGUF 파일이 아님 |
 | `MF021` | 오류 | `ADAPTER` 경로가 없음 (끄려면 `--ignore MF021`) |
 | `TP001`~`TP004` | 오류 | 짝이 안 맞는 `{{ }}`, Go 템플릿 안의 Jinja 문법, 불필요한 `end`/`else`, 닫히지 않은 블록 |

@@ -35,7 +35,7 @@ uv sync
 uv run modelfile-doctor --version
 ```
 ```text
-modelfile-doctor 0.3.2
+modelfile-doctor 0.3.3
 ```
 
 To put the command on your PATH: `uv tool install git+https://github.com/LeeGyeongPil/modelfile-doctor`. There are no runtime dependencies; `gguf` and `numpy` are only used by the tests.
@@ -172,7 +172,7 @@ Use it as a [pre-commit](https://pre-commit.com) hook; in `.pre-commit-config.ya
 ```yaml
 repos:
   - repo: https://github.com/LeeGyeongPil/modelfile-doctor
-    rev: v0.3.2
+    rev: v0.3.3
     hooks:
       - id: modelfile-doctor
 ```
@@ -254,7 +254,7 @@ flowchart LR
 | `MF002` / `MF004` | error | No `FROM` line, or an unknown instruction such as `SYSTM` |
 | `MF011` / `MF012` | error | Unknown `PARAMETER` name (`TEMPERATURE`), or a value of the wrong type (`num_ctx 4k`) |
 | `MF010` / `MF013` | warning | Deprecated parameter (`mirostat`), or a value outside the usual range (`temperature 5`) |
-| `MF014` | error | `MESSAGE` role is not `system`, `user` or `assistant` |
+| `MF014` | error | `MESSAGE` role is not `system`, `user` or `assistant`, or the message has no content |
 | `MF020` | error | `FROM` path does not exist or is not a GGUF file |
 | `MF021` | error | `ADAPTER` path does not exist (skip with `--ignore MF021`) |
 | `TP001` to `TP004` | error | Unbalanced `{{ }}`, Jinja syntax in a Go template, stray `end`/`else`, a block that is never closed |
