@@ -35,7 +35,7 @@ uv sync
 uv run modelfile-doctor --version
 ```
 ```text
-modelfile-doctor 0.3.1
+modelfile-doctor 0.3.2
 ```
 
 To put the command on your PATH: `uv tool install git+https://github.com/LeeGyeongPil/modelfile-doctor`. There are no runtime dependencies; `gguf` and `numpy` are only used by the tests.
@@ -172,7 +172,7 @@ Use it as a [pre-commit](https://pre-commit.com) hook; in `.pre-commit-config.ya
 ```yaml
 repos:
   - repo: https://github.com/LeeGyeongPil/modelfile-doctor
-    rev: v0.3.1
+    rev: v0.3.2
     hooks:
       - id: modelfile-doctor
 ```
