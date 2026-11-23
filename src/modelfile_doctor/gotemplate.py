@@ -12,12 +12,12 @@ from dataclasses import dataclass
 OPENERS = ("if", "range", "with", "define", "block")
 BRANCHES = ("else",)
 
-# Variables Ollama passes to templates (template/template.go, docs/template.mdx; checked 2026-11-12).
+# Variables Ollama passes to templates (template/template.go, docs/template.mdx, api/types.go; checked 2026-11-23).
 KNOWN_FIELDS = frozenset({
     "System", "Prompt", "Response", "Suffix", "Messages", "Tools",
     "Role", "Content", "ToolCalls", "ToolName", "ToolCallID", "Thinking", "Think", "IsThinkSet",
     "Function", "Name", "Description", "Parameters", "Arguments", "Type", "Properties", "Required", "Enum",
-    "ID", "Index",
+    "ID", "Index", "ThinkLevel", "Images", "Items", "Defs", "AnyOf",
 })
 
 _FIELD = re.compile(r"(?<![0-9])\.([A-Za-z_][A-Za-z0-9_]*)")

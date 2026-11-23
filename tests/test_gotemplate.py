@@ -58,3 +58,8 @@ def test_line_numbers_are_modelfile_based():
 def test_mixed_messages_and_prompt_is_info():
     report = lint_text('FROM x\nTEMPLATE """{{ range .Messages }}{{ end }}{{ .Prompt }}"""\n', select=["TP006"])
     assert [(d.rule, d.line) for d in report.diagnostics] == [("TP006", 2)]
+
+
+def test_think_level_and_api_fields_are_known():
+    tpl = "{{- if $.IsThinkSet }}Reasoning: {{ $.ThinkLevel }}{{ end }}{{ range .Messages }}{{ range .Images }}{{ . }}{{ end }}{{ end }}{{ range .Tools }}{{ .Items }}{{ .Defs }}{{ .AnyOf }}{{ end }}"
+    assert check_template(tpl, 1) == []
