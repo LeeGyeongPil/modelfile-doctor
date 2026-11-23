@@ -35,7 +35,7 @@ uv sync
 uv run modelfile-doctor --version
 ```
 ```text
-modelfile-doctor 0.3.0
+modelfile-doctor 0.3.1
 ```
 
 명령을 PATH 에 두려면 `uv tool install git+https://github.com/LeeGyeongPil/modelfile-doctor` 를 쓰세요. 런타임 의존성은 없습니다. `gguf`·`numpy` 는 테스트에서만 씁니다.
@@ -172,7 +172,7 @@ uv run modelfile-doctor --format json --select CT ./demo-files/Modelfile.bad
 ```yaml
 repos:
   - repo: https://github.com/LeeGyeongPil/modelfile-doctor
-    rev: v0.3.0
+    rev: v0.3.1
     hooks:
       - id: modelfile-doctor
 ```

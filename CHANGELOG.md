@@ -3,6 +3,13 @@
 All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+## [0.3.1] - 2026-11-23
+
+### Fixed
+- `MESSAGE` and `PARAMETER` values written as multi-line `"""..."""` blocks are now parsed as one value instead of being reported as unknown instructions or invalid values.
+
 ## [0.3.0] - 2026-11-13
 
 ### Added
@@ -32,6 +39,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - English and Korean output (`--lang`, `MODELFILE_DOCTOR_LANG`, `LC_ALL`/`LC_MESSAGES`/`LANG`).
 - `demo` command (synthetic GGUF without weights) and `inspect` command.
 
+[0.3.1]: https://github.com/LeeGyeongPil/modelfile-doctor/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/LeeGyeongPil/modelfile-doctor/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/LeeGyeongPil/modelfile-doctor/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/LeeGyeongPil/modelfile-doctor/compare/v0.1.0...v0.1.1
