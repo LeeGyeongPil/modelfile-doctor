@@ -81,6 +81,9 @@ def check_modelfile(parsed: ParsedModelfile, encoding: str, base_dir: str = ".")
             role = cmd.args.split(None, 1)[0] if cmd.args.split() else ""
             if role not in ROLES:
                 diags.append(Diagnostic("MF014", Severity.ERROR, cmd.line, "diag.MF014", {"role": role}))
+            elif not cmd.value_quoted and len(cmd.args.split(None, 1)) < 2:
+                # Ollama rejects `MESSAGE <role>` without content (unexpected EOF).
+                diags.append(Diagnostic("MF014", Severity.ERROR, cmd.line, "diag.MF014.empty", {"role": role}))
         elif cmd.name == "from" and cmd.args:
             diags.extend(_check_from_path(cmd.line, cmd.args, base_dir))
         elif cmd.name == "adapter" and cmd.args:

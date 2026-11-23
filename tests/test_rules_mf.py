@@ -95,3 +95,22 @@ def test_multiline_triple_quoted_message_and_stop_are_not_errors():
     for text in (msg, stop):
         rules = {d.rule for d in lint_text(text).diagnostics}
         assert not rules & {"MF003", "MF004", "MF014", "MF016"}
+
+
+def test_message_without_content_is_mf014():
+    for text in ("FROM foo\nMESSAGE system\n", "FROM foo\nMESSAGE system", "FROM foo\nMESSAGE system   \n"):
+        report = lint_text(text, select=["MF"])
+        assert [(d.rule, d.line, d.message_key) for d in report.diagnostics if d.rule == "MF014"] == [
+            ("MF014", 2, "diag.MF014.empty")
+        ], text
+    ok = lint_text("FROM foo\nMESSAGE system hi\n", select=["MF"])
+    assert "MF014" not in {d.rule for d in ok.diagnostics}
+
+
+def test_message_without_content_cli_exit_code(tmp_path, capsys):
+    f = tmp_path / "Modelfile"
+    f.write_text("FROM foo\nMESSAGE system\n")
+    assert main(["--no-color", "--lang", "en", "--strict", str(f)]) == 1
+    assert "2: error MF014 MESSAGE system has no content." in capsys.readouterr().out
+    assert main(["--no-color", "--lang", "ko", str(f)]) == 1
+    assert "MESSAGE system 에 내용이 없습니다." in capsys.readouterr().out
