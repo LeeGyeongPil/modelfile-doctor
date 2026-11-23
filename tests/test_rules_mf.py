@@ -87,3 +87,11 @@ def test_adapter_missing_cli(tmp_path, capsys):
     (tmp_path / "Modelfile").write_text("FROM qwen3:4b\nADAPTER ./missing-lora.gguf\n")
     assert main(["--lang", "en", str(tmp_path / "Modelfile")]) == 1
     assert "ADAPTER path" in capsys.readouterr().out
+
+
+def test_multiline_triple_quoted_message_and_stop_are_not_errors():
+    msg = 'FROM m.gguf\nMESSAGE system """\nYou are a file parser.\n"""\nMESSAGE user """Hello\nthere"""\n'
+    stop = 'FROM m.gguf\nPARAMETER stop <|im_end|>\nPARAMETER stop """### User:\n"""\n'
+    for text in (msg, stop):
+        rules = {d.rule for d in lint_text(text).diagnostics}
+        assert not rules & {"MF003", "MF004", "MF014", "MF016"}

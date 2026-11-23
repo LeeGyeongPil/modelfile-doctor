@@ -29,6 +29,9 @@ class Command:
     args: str  # value with surrounding quotes removed
     quote: str  # "none" | "double" | "triple"
     terminated: bool = True
+    # True for `MESSAGE <role> """..."""` / `PARAMETER <name> """..."""`: ``args`` is then
+    # "<first word> <unquoted value>" and ``quote`` is "triple".
+    value_quoted: bool = False
 
 
 @dataclass
@@ -53,15 +56,24 @@ def parse_modelfile(text: str) -> ParsedModelfile:
         parts = stripped.split(None, 1)
         raw_name = parts[0]
         rest = parts[1].strip() if len(parts) > 1 else ""
+        prefix = ""
+        value_quoted = False
+        if raw_name.lower() in ("message", "parameter"):
+            sub = rest.split(None, 1)
+            if len(sub) == 2 and sub[1].lstrip().startswith(TRIPLE):
+                prefix = sub[0] + " "
+                rest = sub[1].lstrip()
+                value_quoted = True
         if rest.startswith(TRIPLE):
             body = rest[3:]
             end = body.find(TRIPLE)
             if end != -1:
                 result.commands.append(
-                    Command(lineno, lineno, raw_name, raw_name.lower(), body[:end], "triple")
+                    Command(lineno, lineno, raw_name, raw_name.lower(), prefix + body[:end], "triple",
+                            True, value_quoted)
                 )
                 continue
-            buf = [body]
+            buf = [prefix + body]
             closed = False
             end_line = lineno
             while i < len(lines):
@@ -75,7 +87,8 @@ def parse_modelfile(text: str) -> ParsedModelfile:
                     break
                 buf.append(cur)
             result.commands.append(
-                Command(lineno, end_line, raw_name, raw_name.lower(), "\n".join(buf), "triple", closed)
+                Command(lineno, end_line, raw_name, raw_name.lower(), "\n".join(buf), "triple", closed,
+                        value_quoted)
             )
         elif rest.startswith('"'):
             closed = len(rest) >= 2 and rest.endswith('"')
@@ -90,11 +103,16 @@ def parse_modelfile(text: str) -> ParsedModelfile:
 
 def split_parameter(cmd: Command) -> tuple[str, str, bool]:
     """Split a PARAMETER command into ``(name, value, value_was_quoted)``."""
+    if cmd.value_quoted:  # `PARAMETER <name> """..."""`
+        parts = cmd.args.split(None, 1)
+        return parts[0], (cmd.args[len(parts[0]) + 1:] if len(parts) > 1 else ""), True
     if cmd.quote != "none":  # `PARAMETER "x y"` is malformed; treat the whole thing as a name
         return cmd.args, "", False
     parts = cmd.args.split(None, 1)
     name = parts[0] if parts else ""
     value = parts[1].strip() if len(parts) > 1 else ""
+    if len(value) >= 6 and value.startswith(TRIPLE) and value.endswith(TRIPLE):
+        return name, value[3:-3], True
     if len(value) >= 2 and value.startswith('"') and value.endswith('"'):
         return name, value[1:-1], True
     return name, value, False

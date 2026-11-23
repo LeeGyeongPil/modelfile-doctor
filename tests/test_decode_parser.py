@@ -45,3 +45,29 @@ def test_unterminated_quotes_are_flagged():
     parsed = parse_modelfile('SYSTEM "open\nSYSTEM """never\nclosed\n')
     assert [c.terminated for c in parsed.commands] == [False, False]
     assert [c.line for c in parsed.commands] == [1, 2]
+
+
+def test_message_and_parameter_triple_quoted_values_span_lines():
+    # Inputs mirror Ollama parser_test.go TestParseFileMessages / TestParseFileParameters.
+    text = (
+        'FROM m.gguf\nMESSAGE system """\nYou are a file parser.\n"""\n'
+        'MESSAGE user """Hello\nthere"""\n'
+        'PARAMETER stop <|im_end|>\nPARAMETER stop """### User:\n"""\n'
+    )
+    parsed = parse_modelfile(text)
+    assert [(c.name, c.line, c.end_line) for c in parsed.commands] == [
+        ("from", 1, 1), ("message", 2, 4), ("message", 5, 6), ("parameter", 7, 7), ("parameter", 8, 9),
+    ]
+    assert all(c.terminated for c in parsed.commands)
+    assert parsed.commands[2].args == "user Hello\nthere"
+    assert split_parameter(parsed.commands[4]) == ("stop", "### User:\n", True)
+
+
+def test_single_line_triple_quoted_parameter_is_unquoted():
+    cmd = parse_modelfile('PARAMETER stop """x"""\n').commands[0]
+    assert split_parameter(cmd) == ("stop", "x", True)
+
+
+def test_unterminated_triple_quoted_message_is_flagged():
+    parsed = parse_modelfile('MESSAGE user """never\nclosed\n')
+    assert [c.terminated for c in parsed.commands] == [False]
